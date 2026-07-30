@@ -1,0 +1,22 @@
+# Secrets / local config
+.env
+bulb_config.json
+
+# Claude Code local project instructions
+CLAUDE.md
+
+# Captured traffic / logs
+*.bin
+*.ab
+*.log
+
+# Claude Code local settings
+.claude/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
