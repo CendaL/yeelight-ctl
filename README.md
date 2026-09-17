@@ -46,8 +46,8 @@ python setup_bulb.py
 
 Factory-reset the bulb (toggle power on/off ~5 times until it pulses), connect your
 PC to the bulb's temporary `yeelink-light-xxxx` WiFi hotspot, then run the script.
-It discovers the bulb, reads its token, and sends your home WiFi credentials so the
-bulb joins your network.
+It discovers the bulb, reads its token, offers to enable Yeelight LAN/developer
+mode, and then sends your home WiFi credentials so the bulb joins your network.
 
 `provision_wifi.py` is a lower-level alternative that reads `WIFI_SSID`,
 `WIFI_PASSWORD`, `BULB_TOKEN`, and `BULB_AP_IP` from `.env`.

@@ -5,8 +5,9 @@ Steps:
   1. Factory reset the bulb (toggle power 5 times quickly)
   2. Connect your PC to the bulb's WiFi AP (e.g. "yeelink-light-xxxxx")
   3. Run this script — it discovers the bulb, grabs the token,
-     and sends your home WiFi credentials to the bulb
-  4. The bulb joins your home WiFi with the same token
+     and optionally enables Yeelight LAN/developer mode
+  4. Enter your home WiFi credentials
+  5. The bulb joins your home WiFi with the same token
 
 Usage:
     python setup_bulb.py
@@ -20,7 +21,7 @@ import time
 from pathlib import Path
 
 try:
-    from miio import Device
+    from miio import Device, Yeelight
     from miio.exceptions import DeviceException
 except ImportError:
     print("python-miio not installed. Run: pip install python-miio")
@@ -106,6 +107,16 @@ def configure_wifi(ip: str, token: str, ssid: str, password: str):
         return None
 
 
+def enable_developer_mode(ip: str, token: str):
+    """Enable Yeelight LAN/developer mode while the bulb is in AP mode."""
+    device = Yeelight(ip, token)
+    try:
+        return device.set_developer_mode(True)
+    except DeviceException as e:
+        print(f"Error enabling LAN/developer mode: {e}")
+        return None
+
+
 def main():
     print("=== Mi Smart LED Bulb Setup ===\n")
     print("Prerequisites:")
@@ -147,6 +158,16 @@ def main():
     token = dev["token"]
     ip = dev["ip"]
     print(f"Got token: {token}\n")
+
+    enable_lan = input("Enable Yeelight LAN/developer mode? [y/N]: ")
+    if enable_lan.strip().lower() in ("y", "yes"):
+        print("Enabling Yeelight LAN/developer mode...")
+        developer_mode_result = enable_developer_mode(ip, token)
+        if developer_mode_result is None:
+            print("LAN/developer mode could not be enabled.")
+            print("The bulb is still in setup mode; retry while connected to its WiFi.")
+            sys.exit(1)
+        print(f"Result: {developer_mode_result}\n")
 
     # Ask for home WiFi credentials
     print("Now enter your home WiFi details so the bulb can join your network.\n")
